@@ -33,13 +33,20 @@ namespace HEBPEnumeratorFromVEBP
                 while(VEBPFileReader.BaseStream.Position != length)
                 {
                     UInt32 VEBPInt = VEBPFileReader.ReadUInt32();
-                    //
+                    //HEBPEnumeration
                 }
             }
 
             Console.WriteLine("press enter key to finish...");
             Console.ReadKey();
         }
+
+        static void HEBPEnumeration(UInt32 VEBPInt, ref Dictionary<int, Dictionary<int, List<List<int>>>> HEBPiMap)
+        {
+            //implement HEBPEnumeration with distinctHEBPEnumeration()
+        }
+
+
 
         static Dictionary<int, Dictionary<int, List<List<int>>>> hebpMapFromBinaryFile(BinaryReader readFile)
         {
