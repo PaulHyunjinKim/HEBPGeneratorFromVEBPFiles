@@ -12,17 +12,17 @@ namespace HEBPEnumeratorFromVEBP
     {
         public static int M = 0;
         public static int N = 0;
-        public const int numberOfSameBits = 24;
+        public const int numberOfSameBits = 3;
         public static UInt32 numbOfElements = 0;
         public static int[] maskArray;
-        public static int numberOfFiles = 3;
+        public static int numberOfFiles = 271;
     }
     class Program
     {
         static void Main(string[] args)
         {
-            GlobalVar.M = 3;//int.Parse(args[0]);
-            GlobalVar.N = 3;//int.Parse(args[1]);
+            GlobalVar.M = 5;//int.Parse(args[0]);
+            GlobalVar.N = 5;//int.Parse(args[1]);
             int fileNumber = 0;//int.Parse(args[2]);
 
             GlobalVar.maskArray = new int[GlobalVar.M * (GlobalVar.N - 1)];
@@ -45,7 +45,7 @@ namespace HEBPEnumeratorFromVEBP
                 
                 using (BinaryReader VEBPFileReader = new BinaryReader(File.Open(GlobalVar.M + "x" + GlobalVar.M + "Files\\" + fileNumber + ".bin", FileMode.Open)))
                 {
-                    using (BinaryWriter EBPFileWriter = new BinaryWriter(File.Open(GlobalVar.M + "x" + GlobalVar.M + "Files\\" + fileNumber + "_OUT.bin", FileMode.Create)))
+                    using (BinaryWriter EBPFileWriter = new BinaryWriter(File.Open(GlobalVar.M + "x" + GlobalVar.M + "FilesOUT\\" + fileNumber + "_OUT.bin", FileMode.Create)))
                     {
                         long length = VEBPFileReader.BaseStream.Length;
                         while (VEBPFileReader.BaseStream.Position != length)
@@ -91,19 +91,28 @@ namespace HEBPEnumeratorFromVEBP
             {
                 bool HEBPIsDistinct = true;
                 int HEBPInt = HEBPBits.Data;
-                //BitVector32 VEBPBits = new BitVector32(VEBPInt);
+                BitVector32 VEBPBits = new BitVector32(VEBPInt);
                 //Console.Write("VEBPBits: " + VEBPBits + "  ,  " + "HEBPBits: " + HEBPBits);
                 HEBPIsDistinct = checkIfDistinctHEBP(VEBPInt, HEBPInt);
-                //Console.WriteLine("symm "+HEBPIsDistinct);
-                if((GlobalVar.M == 3 || GlobalVar.M == 5)&& HEBPIsDistinct)
+                int VEBPBitNumb = 0;
+                int HEBPBitNumb = 0;
+                
+                for(int i=0; i<GlobalVar.M*(GlobalVar.N-1); i++)
                 {
+                    if (VEBPBits[GlobalVar.maskArray[i]]) VEBPBitNumb++;
+                    if (HEBPBits[GlobalVar.maskArray[i]]) HEBPBitNumb++;
+                }
+                //Console.WriteLine("symm "+HEBPIsDistinct);
+                if((GlobalVar.M == 3 || GlobalVar.M == 5)&& HEBPIsDistinct && VEBPBitNumb == HEBPBitNumb && VEBPBitNumb!= 0)
+                {
+                    //Console.WriteLine(VEBPBitNumb+" , "+HEBPBitNumb);
                     HEBPIsDistinct = checkRotationalSymmetryOfEBP(VEBPInt, HEBPInt);
                     //Console.WriteLine("rotate "+HEBPIsDistinct);
                 }
                 if(HEBPIsDistinct)
                 {
                     GlobalVar.numbOfElements++;
-                    BitVector32 VEBPBits = new BitVector32(VEBPInt);
+                    //BitVector32 VEBPBits = new BitVector32(VEBPInt);
                     //Console.Write("VEBPBits: " + VEBPBits + "  ,  " + "HEBPBits: " + HEBPBits);
                     //Console.WriteLine();
                     ////EBPFileWriter.Write(VEBPInt);
